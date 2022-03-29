@@ -30,16 +30,14 @@ def chat_setup(f):
     os.system('clear')
     print("Initalizing user settings...")
     time.sleep(1)
-    userName = input("Before we get started, please enter a username:")
-
     hostname = socket.gethostname()
     hostIP = socket.gethostbyname(hostname)
 
+    userName = input("Before we get started, please enter a username: ").strip()
     logging.debug("Entering Infinite While Loop!")
-
-    while True:
+    while not userName:
         try:
-            userName = string(userName)
+            userName = str(userName)
         except ValueError:
             logging.error("Exceuption occured. Variable %s was not a valid entry", userName)
             continue
@@ -51,9 +49,10 @@ def chat_setup(f):
 
     user = UserData(userName=userName,hostIP=hostIP)
 
-    f.write("FILE CREATED: ", datetime.datetime.now())
-    f.write("USER-ENTERED 'USERNAME':", userName)
-    f.write("USER HOST IP: ",hostIP)
+    f.write("FILE CREATED: " + str(datetime.datetime.now()) + "\n")
+    f.write("USER-ENTERED 'USERNAME': " + userName + "\n")
+    f.write("USER HOST IP: " + hostIP + "\n")
+    f.write("**** BEGIN CHAT LOGS **** ")
     return user
 
 
@@ -77,7 +76,7 @@ def main_menu():
         print("************************")
 
         print("All invalid options will be ignored")
-        ui = input("Please select options 1-3 using your keyboard  \n")
+        ui = input("Please select options 1-3 using your keyboard  \n").strip()
         print("\n\n")
         try:
             ui = int(ui)
@@ -89,7 +88,7 @@ def main_menu():
             logging.debug("Succesfully broke from while loop")
             user = chat_setup(f)
             ##connect chat (pass fd and user obj)
-            break
+            continue
         if ui == 2:
             f.close()
             quit_program()
