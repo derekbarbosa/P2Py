@@ -6,6 +6,7 @@ import datetime
 import pyjokes
 import logging
 import socket
+import threading
 from . import messaging
 
 class UserData:
@@ -57,11 +58,13 @@ def chat_setup(f):
 
 #messaging() in message.py
 def chat(user1):
-    user2 = UserData()
-    recv_sock, send_sock, user2.name, user2.ip= messaging.port_setup()
+    dudfd = 0;
+    recv_sock, send_sock, tempname, tempIP= messaging.port_setup()
     user1.fd.write("REMOTE HOSTNAME: " +  user2.name + "\n")
     user1.fd.write("REMOTE IP: " + user2.ip + "\n")
     user1.fd.write("**** BEGIN CHAT LOGS **** ")
+
+    user2 = UserData(tempname, tempIP, dudfd)
 
     # set up message receiving in the background on a different thread
     receive_thread = threading.Thread(target=messaging.receive_messages, args=([recv_sock, user2.name]))
