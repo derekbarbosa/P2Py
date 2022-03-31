@@ -1,56 +1,48 @@
 import socket
 import multithreading
-
+import datetime
 
 def port_setup():
-    port_to_send = input("Port to send to: ")
-    ip_to_send = input("Ip address to send to: ")
-    port_to_listen = input("Port to receive on: ")
-    conn_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    conn_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    conn_sock.setblocking(0)
+    port_to_send = 9124
+    sending_hostname = input("Hostname of person to send to: ")
+    ip_to_send = socket.gethostbyname(sending_hostname)
+    port_to_listen = 9124
+    recv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    recv_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    recv_sock.setblocking(0)
     send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     send_sock.setblocking(0)
-    conn_sock.bind('', int(port_to_listen))
-    conn_sock.listen(1)
+    recv_sock.bind('', int(port_to_listen))
+    recv_sock.listen(1)
     send_sock.connect(ip_to_send, int(port_to_send))
-    return conn_sock, send_sock
+    return recv_sock, send_sock, sending_hostname, ip_to_send
 
-def receive_messages(self, sock):
+def receive_messages(self, sock, chat_fd,remoteUserName):
     #send messages
+    conn, addr = sock.accept()
     while True:
-        message_received = sock.recv(1024)
+        message_received = conn.recv(1024)
         if message_received == ' ':
             pass
         else:
-            print(message_received.decode())
+            print(remoteUserName + message_received.decode())
+            chat_fd.write("MESSAGE RECEIVED: " + message_received.decode() + " " + str(datetime.datetime.now()) + "\n")
 
 
-def send_messages(self, sock):
+def send_messages(self, sock, chat_fd, localUserName):
     #receive messages
     while True:
         message_to_send = input("Enter message: ").replace('b', '').encode('utf-8')
         if message_to_send == ' ':
             pass
         else:
-            sock.sendall(message_to_send)
+            sock.sendall(message_to_send + localUserName)
             print("Message sent!")
+            chat_fd.write("MESSAGE SENT: " + message_to_send.decode() + " " + str(datetime.datetime.now()) + "\n")
             q_code = str(input("Do you wish to continue (Y/N)?"))
             if q_code == "Y":
                 return
             else:
                 continue
 
-
-def messaging():
-    recv_sock, send_sock = port_setup()
-    # set up message receiving in the background on a different thread
-<<<<<<< HEAD
-    receive_thread = multithreading.Thread(target=receive_messages, args=([recv_sock]))
-=======
-    receive_thread = multithreading.Thread(target=receive_messages(sock=recv_sock), args=([recv_sock]))
->>>>>>> e450cb12d0e10ef228b9474b90a347dce3533760
-    receive_thread.start()
-    send_messages()   
-    receive_thread.join()

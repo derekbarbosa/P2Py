@@ -9,9 +9,10 @@ import socket
 from . import messaging
 
 class UserData:
-    def __init__(self, userName, hostIP):
+    def __init__(self, userName, hostIP, filedescriptor):
         self.name = userName
         self.ip = hostIP
+        self.fd = filedescriptor
 
 
 def tell_joke():
@@ -47,15 +48,26 @@ def chat_setup(f):
         else:
             print("Error, username not valid. Please enter valid username")
 
-    user = UserData(userName=userName,hostIP=hostIP)
+    user = UserData(userName=userName,hostIP=hostIP,filedescriptor=f)
 
     f.write("FILE CREATED: " + str(datetime.datetime.now()) + "\n")
     f.write("USER-ENTERED 'USERNAME': " + userName + "\n")
     f.write("USER HOST IP: " + hostIP + "\n")
-    f.write("**** BEGIN CHAT LOGS **** ")
     return user
 
+#messaging() in message.py
+def chat(user1):
+    user2 = UserData()
+    recv_sock, send_sock, user2.name, user2.ip= messaging.port_setup()
+    user1.fd.write("REMOTE HOSTNAME: " +  user2.name + "\n")
+    user1.fd.write("REMOTE IP: " + user2.ip + "\n")
+    user1.fd.write("**** BEGIN CHAT LOGS **** ")
 
+    # set up message receiving in the background on a different thread
+    receive_thread = multithreading.Thread(target=messaging.receive_messages, args=([recv_sock, user2.name]))
+    receive_thread.start()
+    messaging.send_messages(send_sock, user1.name)   
+    receive_thread.join()
 
 def main_menu():
     os.system('clear')
@@ -86,7 +98,8 @@ def main_menu():
             continue
         if ui == 1:
             logging.debug("Succesfully broke from while loop")
-            user = chat_setup(f)
+            user1 = chat_setup(f)
+            user2 = chat(user1)
             ##connect chat (pass fd and user obj)
             continue
         if ui == 2:
