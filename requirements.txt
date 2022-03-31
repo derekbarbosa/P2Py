@@ -1,0 +1,4 @@
+pathlib    >=   1.0.1
+pip        >=   22.0.4
+pyjokes    >=   0.6.0
+setuptools >=   60.5.0
