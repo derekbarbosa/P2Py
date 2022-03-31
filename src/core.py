@@ -6,7 +6,7 @@ import datetime
 import pyjokes
 import logging
 import socket
-
+from . import messaging
 
 class UserData:
     def __init__(self, userName, hostIP):
@@ -60,7 +60,7 @@ def chat_setup(f):
 def main_menu():
     os.system('clear')
 
-    f = open("chatdata.txt", "w+")
+    f = open("chatdata" + str(datetime.datetime.now()) + ".txt", "w+")
 
     print("WELCOME TO OUR CHAT ROOM")
     print("PLEASE ENJOY YOUR STAY!!")
