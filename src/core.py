@@ -64,7 +64,7 @@ def chat(user1):
     user1.fd.write("**** BEGIN CHAT LOGS **** ")
 
     # set up message receiving in the background on a different thread
-    receive_thread = multithreading.Thread(target=messaging.receive_messages, args=([recv_sock, user2.name]))
+    receive_thread = threading.Thread(target=messaging.receive_messages, args=([recv_sock, user2.name]))
     receive_thread.start()
     messaging.send_messages(send_sock, user1.name)   
     receive_thread.join()
