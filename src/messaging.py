@@ -1,5 +1,4 @@
 import socket
-import multithreading
 import datetime
 
 def port_setup():
