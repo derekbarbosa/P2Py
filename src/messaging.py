@@ -46,7 +46,7 @@ def send_messages(self, sock):
 if __name__ == "__main__":
     recv_sock, send_sock = port_setup()
     # set up message receiving in the background on a different thread
-    receive_thread = threading.Thread(target=Server, args=([recv_sock]))
+    receive_thread = multithreading.Thread(target=receive_messages, args=([recv_sock]))
     receive_thread.start()
     send_messages()   
     receive_thread.join()
