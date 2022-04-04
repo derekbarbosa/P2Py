@@ -13,9 +13,9 @@ def port_setup():
     send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     send_sock.setblocking(0)
-    recv_sock.bind('', int(port_to_listen))
+    recv_sock.bind(('', int(port_to_listen)))
     recv_sock.listen(1)
-    send_sock.connect(ip_to_send, int(port_to_send))
+    send_sock.connect((ip_to_send, int(port_to_send)))
     return recv_sock, send_sock, sending_hostname, ip_to_send
 
 def receive_messages(self, sock, chat_fd,remoteUserName):
