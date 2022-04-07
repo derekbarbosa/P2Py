@@ -19,12 +19,13 @@ class UserData:
 def tell_joke():
     logging.debug("Telling a joke")
     print(pyjokes.get_joke(language="en", category="all"))
+    return
 
 
 def quit_program():
     logging.debug("Quitting program")
     print("Goodbye!")
-    time.sleep(1)
+    return
 
 
 def chat_setup(f):
@@ -114,3 +115,4 @@ def main_menu():
             tell_joke()
             print("\n\n")
             continue
+    return
