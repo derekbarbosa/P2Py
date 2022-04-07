@@ -25,7 +25,6 @@ def quit_program():
     logging.debug("Quitting program")
     print("Goodbye!")
     time.sleep(1)
-    exit(1)
 
 
 def chat_setup(f):
@@ -109,7 +108,7 @@ def main_menu():
         if ui == 2:
             f.close()
             quit_program()
-            break
+            return
         if ui == 3:
             print("\n\n")
             tell_joke()
